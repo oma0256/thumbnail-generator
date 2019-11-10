@@ -38,30 +38,16 @@
                 chatSocket.send(JSON.stringify({image: srcData, imageName: imageFile[0].name}))
             }
             fileReader.readAsDataURL(imageFile[0]);
-            // AWS.config.region = 'us-east-1'; // Region
-            // AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            //     IdentityPoolId: 'us-east-1:392aa878-56e5-4c94-98bc-b69c6b1d2316',
-            // });
-            // const s3 = new AWS.S3()
-            // const params = {
-            //     Bucket: 'first-bucket-oma0256',
-            //     Key: imageFile[0].name,
-            //     Body: imageFile[0]
-            // }
-            // s3.upload(params, function(err, data) {
-            //     console.log(err, data);
-            //     chatSocket.send(JSON.stringify({message: 'Thumbnail created'}))
-            // });
-            // console.log(imageFile[0])
-            // const fd = new FormData();
-            // fd.append("image", imageFile[0], imageFile[0].name);
-            // chatSocket.send(fd)
         }
 
         chatSocket.onopen = function(e) {
             const form = document.querySelector('#form')
             form.addEventListener("submit", onSubmitHandler)
         }
+
+        chatSocket.onmessage = e => {
+            console.log(JSON.parse(e.data));
+        };
 
         chatSocket.onclose = function(e) {
             document.querySelector('#chat-log').value += ('Socket closed unexpectedly, please reload the page.\n')

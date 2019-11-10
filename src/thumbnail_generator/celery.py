@@ -3,7 +3,7 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thumbnail_generator.settings')
 
-app = Celery('thumbnail_generator')
+app = Celery('src')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
