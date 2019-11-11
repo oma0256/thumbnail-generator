@@ -13,18 +13,26 @@
 <body>
     <div class="container">
         <div class="row mt-3">
-            <div class="col-sm-6 offset-sm-2">
+            <div class="col-sm-5 offset-sm-2">
                 <h2>Thumbnail Generator</h2>
                 <form id="form">
                     <div class="custom-file mb-2">
                         <input type="file" class="custom-file-input" id="customFile">
                         <label class="custom-file-label" for="customFile">Choose file</label>
                     </div>
-                    <button class="btn btn-primary" type="submit">Upload</button>
+                    <button class="btn btn-outline-primary" type="submit">Create Thumbnail</button>
                 </form>
             </div>
             <div class="col-sm-2">
                 <h3>Thumbnails</h3>
+                <p id="no-thumbnails">No thumbnails created</p>
+                <ul id="thumbnails"></ul>
+            </div>
+            <div class="col-sm-3">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+                    <div class="toast-body" style="background-color: blue; color: white;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -37,7 +45,7 @@
 
         const onSubmitHandler = e => {
             e.preventDefault();
-            const imageFiles = document.querySelector("#image").files
+            const imageFiles = document.querySelector("#customFile").files
             const imageFile = imageFiles[0];
             const fileReader = new FileReader();
             fileReader.onload = fileLoadedEvent => {
@@ -56,7 +64,18 @@
         };
 
         socket.onmessage = e => {
-            console.log(JSON.parse(e.data));
+            const data = JSON.parse(e.data);
+            const toastBody = document.querySelector('.toast-body');
+            $('.toast').toast('show');
+            if (data.hasOwnProperty('message')) {
+                toastBody.innerHTML = data.message;
+            } else {
+                const thumbnails = document.querySelector("#thumbnails");
+                const noThumbnails = document.querySelector("#no-thumbnails");
+                toastBody.innerHTML = 'Thumbnail created';
+                noThumbnails.innerHTML = '';
+                thumbnails.innerHTML += `<li><a href=${data.thumbnail}>${data.filename}</a></li>`;
+            }
         };
     </script>
 </body>

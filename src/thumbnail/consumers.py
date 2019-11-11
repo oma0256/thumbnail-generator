@@ -32,5 +32,11 @@ class ThumbnailConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+    async def processing_image(self, event):
+        await self.send(json.dumps({'message': event['message']}))
+
     async def upload_complete(self, event):
-        await self.send(json.dumps({'thumbnail': event['thumbnail']}))
+        await self.send(json.dumps({
+            'thumbnail': event['thumbnail'],
+            'filename': event['filename']
+        }))
