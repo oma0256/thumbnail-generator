@@ -9,7 +9,7 @@ def convert_base64_string_to_image(base64_string, filename):
 
 
 def create_thumbnail(filename):
-    size = 20, 20
+    size = 200, 200
     try:
         image = Image.open(filename)
         image.thumbnail(size, Image.ANTIALIAS)

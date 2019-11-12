@@ -8,6 +8,8 @@ services:
 
   celery:
     build: .
+    env_file:
+    - .env
     working_dir: /app/src
     command: celery worker -A thumbnail_generator --loglevel=info
     volumes:
@@ -18,6 +20,8 @@ services:
   django:
     build:
       context: .
+    env_file:
+    - .env
     command: python src/manage.py runserver 0.0.0.0:8000
     depends_on:
       - redis

@@ -10,11 +10,11 @@ from django.conf import settings
 @shared_task
 def upload_image_to_s3(filename, group_name):
     s3_client = boto3.client(
-        's3', aws_access_key_id='AKIAVUTUWWOPQFMXZ7XN',
-        aws_secret_access_key='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')
+        's3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     try:
         file_path = f'{settings.PROJECT_DIR}/{filename}'
-        bucket = "first-bucket-oma0256"
+        bucket = os.getenv('BUCKET')
         response = s3_client.upload_file(file_path, bucket, filename)
         return {'filename': filename, 'group_name': group_name}
     except Exception as e:
@@ -41,7 +41,8 @@ def thumbnail_upload_complete(sender, result, **kwargs):
     file_path = f'{settings.PROJECT_DIR}/{filename}'
     os.remove(file_path)
     channel_layer = get_channel_layer()
-    thumbnail = f'https://first-bucket-oma0256.s3.amazonaws.com/{filename}'
+    BUCKET_NAME = os.getenv('BUCKET')
+    thumbnail = f'https://{BUCKET_NAME}.s3.amazonaws.com/{filename}'
     async_to_sync(channel_layer.group_send)(
         group_name,
         {
