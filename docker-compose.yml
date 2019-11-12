@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    working_dir: /app/src
+    command: celery worker -A thumbnail_generator --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  django:
+    build:
+      context: .
+    command: python src/manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app

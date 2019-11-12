@@ -1,4 +1,3 @@
-# import boto3
 import os
 from PIL import Image
 
@@ -16,15 +15,5 @@ def create_thumbnail(filename):
         image.thumbnail(size, Image.ANTIALIAS)
         image.save(filename)
         return filename
-    except:
-        print('Failed to create thumbnail')
-
-
-# def upload_image_to_s3(filename):
-#     s3_client = boto3.client('s3')
-#     try:
-#         response = s3_client.upload_file(
-#             filename, "first-bucket-oma0256", filename)
-#         return filename
-#     except:
-#         print('Image upload failed')
+    except Exception as e:
+        print(e)
